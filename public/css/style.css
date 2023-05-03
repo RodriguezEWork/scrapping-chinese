@@ -1,0 +1,159 @@
+body {
+	background: #333 !important;
+    margin: 5rem;
+	}
+
+* {
+	margin:  0px;
+	padding: 0px;
+  font-family:'Lato';
+	}
+
+    h1 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+a {
+	text-decoration: none !important;
+	color: #333;
+	}
+
+ul, ol {
+	margin: 0px;
+	}
+
+.container {
+	max-width: 1200px;
+    margin: 0 auto;
+	}
+
+.top50 {
+	margin-top: 50px;
+	}
+
+.row {
+	margin-bottom: 50px;
+	}
+
+    .cartas {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+/***item-1 Login box*********************************************************************/
+
+.item-1 {
+		width: 250px;
+		height: auto;
+		background: #fff;
+    margin: 0 auto;
+		-moz-box-shadow: 0 0 5px #000;
+		-webkit-box-shadow: 0 0 5px#000;
+		box-shadow: 0 0 5px #000;
+	}
+
+.item-1 h1 {
+	font-size: 24px;
+	margin-top: 0px;
+	}
+
+.img-container {
+	width: 100%;
+	height: 120px;
+	text-align: center;
+	}
+
+.img-container a {
+	margin: 0px auto;
+	text-align: center;
+	}
+
+.img-container a img {
+	border: 3px solid #fff;
+	margin-top: 20px;
+    width: 176px;
+    height: 60px;
+    transition: all .3s ease;
+}
+
+.img-container a img:hover {
+    transform: scale(1.2);
+    transition: all .3s ease;
+}
+
+.robin-key {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	width: 100%;
+    margin: 0 auto;
+	height: auto;
+	background: #fff;
+    border-top: 1px solid #5c5c5c;
+	}
+
+.robin-key input {
+	font-size: 15px;
+	color: #000000;
+	margin-bottom: 0px;
+    outline: none;
+    border: none;
+	margin-left: 20px;
+    width: 70%;
+	}
+
+.robin-key ul {
+	display: flex;
+    align-items: center;
+	margin: 0px;
+	padding: 0px;
+	}
+
+.robin-key ul li {
+	padding: 4px 12px;
+	border: 1px solid #ddd;
+	color: #3f4c6b;
+	list-style: none;
+	float: left;
+	}
+
+.robin-key ul li a {
+	color: #3f4c6b;
+	}
+
+.robin-key ul li a:hover {
+	color: #242D3F;
+	}
+
+ul.follow-list {
+	margin: 0px;
+	padding: 0px;
+	background: #3f4c6b;
+	width: 100%;
+	}
+
+ul.follow-list li {
+	width: 25%;
+	float: left;
+	list-style: none;
+	padding: 8px 0px;
+	background: #111F28;
+	}
+
+ul.follow-list li a {
+	padding: 2px 14px;
+	display: inline-block;
+	color: #fff;
+	font-size: 13px;
+	border-right: 1px solid #1C3544;
+
+	}
+
+ul.follow-list li:last-child a {
+	border-right: none;
+	}
+center, center *{ color: #ffffff !important; font-size:14pt; }

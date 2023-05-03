@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Lato:100,300' rel='stylesheet' type='text/css'>
+    <title>Web Scrapping - Novel Assist</title>
+</head>
+<body>
+    <h1>Enlaces disponibles para el Web Scrapping</h1>
+    <div class="cartas container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <div class="item-1">
+                	<div class="img-container">
+                    	<a href="http://www.ddxs.com/" target="_blank"><img src="/img/ddxs.png" /></a>
+                    </div>
+                    <div class="robin-key">
+                        <input type="text" name="" id="" class="url" placeholder="URL">
+                    	<input type="number" name="" id="" class="id" placeholder="ID">
+                    	<input type="number" name="" id="" class="numero" placeholder="N°">
+
+                        <ul>
+                            <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                            <li><a href="#" id="check"><i class="fa fa-check"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <div class="item-1">
+                	<div class="img-container">
+                    	<a href="http://www.faloo.com/" target="_blank"><img src="/img/faloo.png" /></a>
+                    </div>
+                    <div class="robin-key">
+                        <input type="text" name="" id="" class="url" placeholder="URL">
+                    	<input type="number" name="" id="" class="id" placeholder="ID">
+                    	<input type="number" name="" id="" class="numero" placeholder="N°">
+                        
+                        <ul>
+                            <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                            <li><a href="#" id="check"><i class="fa fa-check"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <div class="item-1">
+                	<div class="img-container">
+                    	<a href="http://www.hrsx8.net/" target="_blank"><img src="/img/hrsx8.png" /></a>
+                    </div>
+                    <div class="robin-key">
+                        <input type="text" name="" id="" class="url" placeholder="URL">
+                    	<input type="number" name="" id="" class="id" placeholder="ID">
+                    	<input type="number" name="" id="" class="numero" placeholder="N°">
+                        
+                        <ul>
+                            <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                            <li><a href="#" id="check"><i class="fa fa-check"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <div class="item-1">
+                	<div class="img-container">
+                    	<a href="https://www.wxsy.net/" target="_blank"><img src="/img/wxsy.png" /></a>
+                    </div>
+                    <div class="robin-key">
+                        <input type="text" name="" id="" class="url" placeholder="URL">
+                    	<input type="number" name="" id="" class="id" placeholder="ID">
+                    	<input type="number" name="" id="" class="numero" placeholder="N°">
+                        
+                        <ul>
+                            <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                            <li><a href="#" id="check"><i class="fa fa-check"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <div class="item-1">
+                	<div class="img-container">
+                    	<a href="http://kutun.net/" target="_blank"><img src="/img/kutun.png" /></a>
+                    </div>
+                    <div class="robin-key">
+                        <input type="text" name="" id="" class="url" placeholder="URL">
+                    	<input type="number" name="" id="" class="id" placeholder="ID">
+                    	<input type="number" name="" id="" class="numero" placeholder="N°">
+                        
+                        <ul>
+                            <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                            <li><a href="#" id="check"><i class="fa fa-check"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click', '#check', function (e) {
+
+                e.preventDefault();
+
+                let base = this.closest('.robin-key');
+                let URL = base.querySelector('.url').value;
+                let id = base.querySelector('.id').value;
+                let numero = base.querySelector('.numero').value;
+
+                const postData = {
+                    url: URL,
+                    numerito: numero,
+                    IDnovela: id
+                }
+
+                $.post('/scraping', postData, function (response) {});
+
+            });
+
+        });
+    </script>
+</body>
+</html>
