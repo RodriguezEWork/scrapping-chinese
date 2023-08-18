@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const ejs = require('ejs');
-const { scraping } = require('./controller/scrapingController');
+const { scraping } = require('./controller/scrapingController.js');
 
 app.set("view engine", "ejs");
 app.set('views', __dirname + '/views');

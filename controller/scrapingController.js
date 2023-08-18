@@ -12,8 +12,7 @@ const scraping = (req, res) => {
     var Cap = cap;
     var Novela = IDnovela;
     var textosGenerales = [];
-    var nuevoNumero = Number(numerito) + 30; 
-    console.log(nuevoNumero);
+    var nuevoNumero = Number(numerito) + 50; 
 
     var con = mysql.createConnection({
         host: "localhost",
@@ -25,10 +24,18 @@ const scraping = (req, res) => {
     recorridoPage();
 
     async function recorridoPage() {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-
-        await page.goto(URL);
+        const browser = await puppeteer.launch({
+            headless: false,
+            defaultViewport: { width: 1366, height: 768 }, // Establecer dimensiones de escritorio
+          });
+          const page = await browser.newPage();
+        
+          await page.setUserAgent(
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36'
+          );
+        
+          await page.goto(URL);
+          await page.waitForTimeout(2000);
 
         if (URL.includes('ddxs.com')) {
             const titulaso = await page.evaluate(() => {
@@ -41,7 +48,7 @@ const scraping = (req, res) => {
                 return Elementos;
             })
 
-            for (let entradas = 0; entradas < nuevoNumero; entradas++) {
+            for (let entradas = numero; entradas < nuevoNumero; entradas++) {
                 await page.goto(titulaso[entradas]);
 
                 const textoGeneral = await page.evaluate(() => {
@@ -53,7 +60,7 @@ const scraping = (req, res) => {
                         if(textoFijo.innerText.includes('huanyuanapp')) {
                             continue;
                         }
-                        Elementos2.push(textoFijo.innerText);
+                        Elementos2.push(textoFijo.innerText + "\n\n");
                     }
 
                     return Elementos2;
@@ -66,7 +73,7 @@ const scraping = (req, res) => {
 
         if (URL.includes('faloo.com')) {
             const titulaso = await page.evaluate(() => {
-                const titulos = document.querySelectorAll("div.c_con_mainbody div.c_con_list a");
+                const titulos = document.querySelectorAll("#mulu .DivTable a");
 
                 const Elementos = [];
                 for (let titulo of titulos) {
@@ -75,7 +82,7 @@ const scraping = (req, res) => {
                 return Elementos;
             })
 
-            for (let entradas = numero; entradas <= titulaso.length; entradas++) {
+            for (let entradas = numero; entradas <= nuevoNumero; entradas++) {
                 await page.goto(titulaso[entradas]);
 
                 const textoGeneral = await page.evaluate(() => {
@@ -84,7 +91,7 @@ const scraping = (req, res) => {
 
                     const Elementos2 = [];
                     for (let textoFijo of texto) {
-                        Elementos2.push(textoFijo.innerText);
+                        Elementos2.push(textoFijo.innerText + "\n\n");
                     }
 
                     return Elementos2;
@@ -173,11 +180,11 @@ const scraping = (req, res) => {
 
                 const textoGeneral = await page.evaluate(() => {
 
-                    const texto = document.querySelectorAll("div.chapter_content p");
+                    const texto = document.querySelectorAll(".reading-content .text-left p");
 
                     const Elementos2 = [];
                     for (let textoFijo of texto) {
-                        Elementos2.push(textoFijo.innerText);
+                        Elementos2.push(textoFijo.innerText + "\n\n");
                     }
 
                     return Elementos2;
@@ -188,101 +195,186 @@ const scraping = (req, res) => {
             }
         }
 
-        for (let textoFijo of textosGenerales) {
-            capitulos.push(textoFijo.join('\n'));
-        }
+        if(URL.includes('f2u2.com')) {
+            const titulaso = await page.evaluate(() => {
+                const titulos = document.querySelectorAll("div.listmain dl dd a");
 
-        var otroNuevoNumero = nuevoNumero;
+                const Elementos = [];
+                for (let titulo of titulos) {
+                    var url = titulo.href; 
+                    if (!url.includes("javascript")) {
+                        Elementos.push(url);
+                    }
+                }
+                return Elementos;
+            })
 
-        if (capitulos.length <= nuevoNumero){
-            otroNuevoNumero = capitulos.length;
-        }
+            for (let entradas = numero; entradas < nuevoNumero; entradas++) {
+                await page.goto(titulaso[entradas]);
 
-        for (let capitulo = numero; capitulo < otroNuevoNumero; capitulo++) {
+                const textoGeneralUnico = await page.evaluate(() => {
 
-            let traduccion;
-            let dato = capitulos[capitulo];
+                    var divElement = document.getElementById("chaptercontent");
 
-            if (dato.length >= 5000) {
-
-                let parte1 = dato.slice(0, 4999)
-                let parte2 = dato.slice(5000)
-
-                await page.goto('https://www.deepl.com/es/translator');
-
-                await page.type('div.lmt__inner_textarea_container', parte1);
-                await page.waitForTimeout(10000);
-                await page.waitForSelector('[title*="Haz clic en una palabra para mostrar traducciones alternativas"] div.lmt__textarea.lmt__textarea_dummydiv');
-                let traduccion1 = await page.evaluate(() => {
-
-                    const respuesta = document.querySelector('[title*="Haz clic en una palabra para mostrar traducciones alternativas"] div.lmt__textarea.lmt__textarea_dummydiv');
-
-                    const dato = respuesta.innerHTML
-
-                    return dato
-
-                })
-
-                await page.goto('https://www.deepl.com/es/translator');
-
-                await page.type('div.lmt__inner_textarea_container', parte2);
-                await page.waitForTimeout(10000);
-                await page.waitForSelector('[title*="Haz clic en una palabra para mostrar traducciones alternativas"] div.lmt__textarea.lmt__textarea_dummydiv');
-                let traduccion2 = await page.evaluate(() => {
-
-                    const respuesta = document.querySelector('[title*="Haz clic en una palabra para mostrar traducciones alternativas"] div.lmt__textarea.lmt__textarea_dummydiv');
-
-                    const dato = respuesta.innerHTML
-
-                    return dato
-
-                })
-
-                traduccion = traduccion1.concat(' ', traduccion2)
-
-            } else {
-
-                await page.goto('https://www.deepl.com/es/translator');
-
-                await page.type('div.lmt__inner_textarea_container', capitulos[capitulo]);
-                await page.waitForTimeout(10000);
-                await page.waitForSelector('[title*="Haz clic en una palabra para mostrar traducciones alternativas"] div.lmt__textarea.lmt__textarea_dummydiv');
-                traduccion = await page.evaluate(() => {
-
-                    const respuesta = document.querySelector('[title*="Haz clic en una palabra para mostrar traducciones alternativas"] div.lmt__textarea.lmt__textarea_dummydiv');
-
-                    const dato = respuesta.innerHTML
-
-                    return dato
-
-                })
+                    var textNodes = Array.from(divElement.childNodes).filter(function(node) {
+                        return node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '';
+                    });
+                    
+                    // Obtener el texto entre los elementos <br> para cada nodo de texto
+                    var text = "";
+                    for (var i = 0; i < textNodes.length; i++) {
+                        text += textNodes[i].nodeValue.trim() + "\n\n";
+                    }
+                      
+                    return text;
+                });
+                textosGenerales.push(textoGeneralUnico);
             }
+        }
 
+        if(URL.includes('gdsoftga.com')) {
+            const titulaso = await page.evaluate(() => {
+                const titulos = document.querySelectorAll(".listmain dl dd a");
+
+                const Elementos = [];
+                for (let titulo of titulos) {
+                    var url = titulo.href; 
+                    if (!url.includes("javascript")) {
+                        Elementos.push(url);
+                    }
+                }
+                return Elementos;
+            })
+
+            for (let entradas = numero; entradas < nuevoNumero; entradas++) {
+                await page.goto(titulaso[entradas]);
+
+                const textoGeneralUnico = await page.evaluate(() => {
+
+                    var divElement = document.getElementById("content");
+
+                    var textNodes = Array.from(divElement.childNodes).filter(function(node) {
+                        return node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '';
+                    });
+                    
+                    // Obtener el texto entre los elementos <br> para cada nodo de texto
+                    var text = "";
+                    for (var i = 0; i < textNodes.length; i++) {
+                        text += textNodes[i].nodeValue.trim() + "\n\n";
+                    }
+                      
+                    return text;
+                });
+                textosGenerales.push(textoGeneralUnico);
+            }
+        }
+
+        if (URL.includes('novel-gate.com')) {
+            const titulaso = await page.evaluate(() => {
+                const titulos = document.querySelectorAll(".main.version-chap li a");
+
+                const Elementos = [];
+                for (let titulo of titulos) {
+                    Elementos.push(titulo.href);
+                }
+                return Elementos.reverse();
+            })
+
+            for (let entradas = numero; entradas <= nuevoNumero; entradas++) {
+                await page.goto(titulaso[entradas]);
+
+                const textoGeneral = await page.evaluate(() => {
+
+                    const texto = document.querySelectorAll(".reading-content .text-left p");
+
+                    const Elementos2 = [];
+                    for (let textoFijo of texto) {
+                        Elementos2.push(textoFijo.innerText + "\n\n");
+                    }
+
+                    return Elementos2;
+                });
+
+                textosGenerales.push(textoGeneral);
+
+            }
+        }
+
+        for (let capitulo = 0; capitulo < 50; capitulo++) {
+            
+            let dato = textosGenerales[capitulo].join("");
+            const partes = dividirTexto(dato, 1499);
+            let traduccion;
+            
+            for (let [index, parte] of partes.entries()) {
+                const selector = 'div.lmt__inner_textarea_container [contenteditable="true"]';
+                await page.goto('https://www.deepl.com/es/translator');
+                
+                await page.waitForSelector(selector);
+                await page.type(selector, parte);
+                await page.waitForTimeout(10000);
+                const resultado = await page.evaluate(() => {
+                    document.querySelector('button[data-testid="translator-target-toolbar-copy"]').click();
+                    
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            navigator.clipboard.readText()
+                            .then((text) => {
+                        resolve(text);
+                      })
+                      .catch((error) => {
+                        console.error('Error al leer el portapapeles:', error);
+                        resolve('');
+                      });
+                  }, 1000);
+                });
+              });
+          
+              traduccion = traduccion + ' ' + resultado;
+            };
+                        
             numero++;
-
-            subir(traduccion);
-
-            // traducciones.push(traduccion);
-
+            
+            subir(traduccion);            
         }
         await page.waitForTimeout(2000);
         await browser.close();
-
-        // console.log(traducciones)
-
+        
     };
-
+    
     function subir(texto) {
-
+        
         var sql = "INSERT INTO capitulos (titulo, numero, marcado, capitulo, id_Novelas) VALUES ?";
         var values = [
             ['Capitulo: ', numero, false, texto, Novela],
         ];
         con.query(sql, [values], function (err, result) {
             if (err) throw err;
-            console.log("1 registro insertado");
+            console.log("1 registro insertado= ", numero);
         });
     }
+    
+    function dividirTexto(texto, longitudMaxima) {
+        const pedazos = [];
+      
+        let i = 0;
+        while (i < texto.length) {
+          let pedazo = texto.slice(i, i + longitudMaxima);
+          let ultimoSaltoLinea = pedazo.lastIndexOf('\n');
+      
+          // Si no hay salto de línea en el pedazo o el pedazo completo cabe en la longitud máxima
+          if (ultimoSaltoLinea === -1 || ultimoSaltoLinea >= longitudMaxima) {
+            pedazos.push(pedazo);
+            i += longitudMaxima;
+          } else {
+            pedazos.push(texto.slice(i, i + ultimoSaltoLinea + 1));
+            i += ultimoSaltoLinea + 1;
+          }
+        }
+      
+        return pedazos;
+      }      
+    
 }
 
 module.exports = {
